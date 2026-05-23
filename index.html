@@ -769,7 +769,7 @@ function newGame() {
   const currentFlatSideWidthFt = chooseFlatSideWidthFt();
   const terrain = generateTerrain2D(currentFlatSideWidthFt);
 
-  const flat = getCurrentFlatSideWidthFt();
+  const flat = currentFlatSideWidthFt;
   const clearance = PARAMS.terrain.mountainClearanceFt;
   const houseW = PARAMS.players.houseWidthFt;
 
@@ -931,7 +931,13 @@ function rebuildHouse(player) {
 
 function resetTerrainAndHouses() {
   const oldPlayers = state.players;
+
+  // Regenerate all per-world random setup variables from the seeded RNG.
+  // This keeps both players synchronized while still changing the wind on
+  // each post-house-hit terrain redraw.
   state.currentFlatSideWidthFt = chooseFlatSideWidthFt();
+  state.windMph = Math.round(randRange(PARAMS.physics.windMphMin, PARAMS.physics.windMphMax));
+
   const terrain = generateTerrain2D(state.currentFlatSideWidthFt);
 
   state.terrain = terrain;
